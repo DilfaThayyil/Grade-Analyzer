@@ -12,17 +12,30 @@ model User {
   name     String?
   email    String    @unique
   image    String?
+  uploads  Upload[]
   students Student[]
 }
 
 model Student {
   id        String   @id @default(cuid())
   userId    String
+  uploadId  String
   name      String
   email     String
   subject   String
   marks     Int
   examDate  DateTime
 
+  upload    Upload   @relation(fields: [uploadId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
+}
+
+model Upload {
+  id        String   @id @default(cuid())
+  name      String
+  createdAt DateTime @default(now())
+  userId    String
+
+  user      User     @relation(fields: [userId], references: [id])
+  students  Student[]
 }
