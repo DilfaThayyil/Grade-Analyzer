@@ -15,7 +15,7 @@ export const UserAvatar = ({ userName }: UserAvatarProps) => {
     };
 
     return (
-        <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+        <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
             {getInitials(userName)}
         </div>
     );

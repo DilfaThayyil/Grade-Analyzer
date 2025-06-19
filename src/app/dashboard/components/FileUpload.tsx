@@ -50,7 +50,7 @@ export const FileUpload = ({ onFileUpload, onFileDrop }: FileUploadProps) => {
             />
             <label
                 htmlFor="file-upload"
-                className="inline-flex items-center px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 cursor-pointer transition-colors"
+                className="inline-flex items-center px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 cursor-pointer transition-colors"
             >
                 <Upload className="w-4 h-4 mr-2" />
                 Choose File
