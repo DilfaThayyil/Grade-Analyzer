@@ -30,13 +30,13 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
                     <h3 className="text-xl font-semibold text-gray-900">Student Data</h3>
                     <div className="flex items-center space-x-4">
                         <div className="relative">
-                            <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
+                            <Search className="w-4 h-4 absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" />
                             <input
                                 type="text"
                                 placeholder="Search students..."
                                 value={searchTerm}
                                 onChange={(e) => onSearchChange(e.target.value)}
-                                className="pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                className="pl-10 pr-4 py-2 border text-gray-400 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                             />
                         </div>
                     </div>
@@ -59,9 +59,9 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Exam Date
                             </th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                            {/* <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                 Actions
-                            </th>
+                            </th> */}
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -119,11 +119,11 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
                                         {new Date(student.examDate).toLocaleDateString()}
                                     </div>
                                 </td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {/* <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                     <button className="text-blue-600 hover:text-blue-800 transition-colors">
                                         <Eye className="w-4 h-4" />
                                     </button>
-                                </td>
+                                </td> */}
                             </motion.tr>
                         ))}
                     </tbody>
