@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { Student } from "../Dashboard";
 import ApexChart from './ApexCharts'
 
@@ -73,6 +73,14 @@ export const PieChartComponent = ({ students }: PieChartComponentProps) => {
         };
 
         return { chartData: series, options: chartOptions };
+    }, [students]);
+
+    useEffect(() => {
+        const timeout = setTimeout(() => {
+            window.dispatchEvent(new Event('resize'));
+        }, 400); 
+
+        return () => clearTimeout(timeout);
     }, [students]);
 
     return <ApexChart options={options} series={chartData} type="pie" height={320} />;
