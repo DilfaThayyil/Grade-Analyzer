@@ -28,11 +28,11 @@ export async function POST(req: Request) {
                 const rows = results.data as Record<string, string>[];
                 try {
                     let user = await prisma.user.findUnique({
-                        where: { email: session.user?.email },
+                        where: { email: session.user?.email! },
                     });
                     if (!user) {
                         user = await prisma.user.create({
-                            data: { email: session.user?.email, name: session.user?.name || '' },
+                            data: { email: session.user?.email!, name: session.user?.name || '' },
                         });
                     }
 
