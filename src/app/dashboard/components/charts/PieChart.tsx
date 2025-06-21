@@ -4,6 +4,7 @@ import ApexChart from './ApexCharts'
 
 interface PieChartComponentProps {
     students: Student[];
+    selectedSubject: string;
 }
 
 type GradeKey = 'A (90-100)' | 'B (80-89)' | 'C (70-79)' | 'D (60-69)' | 'F (0-59)';
@@ -16,7 +17,7 @@ interface GradesCount {
     'F (0-59)': number;
 }
 
-export const PieChartComponent = ({ students }: PieChartComponentProps) => {
+export const PieChartComponent = ({ students, selectedSubject }: PieChartComponentProps) => {
     const { chartData, options } = useMemo(() => {
         const grades: GradesCount = {
             'A (90-100)': 0,
@@ -27,16 +28,23 @@ export const PieChartComponent = ({ students }: PieChartComponentProps) => {
         };
 
         students.forEach((student: Student) => {
-            if (student.marks >= 90) grades['A (90-100)']++;
-            else if (student.marks >= 80) grades['B (80-89)']++;
-            else if (student.marks >= 70) grades['C (70-79)']++;
-            else if (student.marks >= 60) grades['D (60-69)']++;
-            else grades['F (0-59)']++;
+            const relevantSubjects = selectedSubject === 'All'
+                ? student.subjects
+                : student.subjects.filter(sub => sub.subject === selectedSubject);
+    
+            relevantSubjects.forEach((subj) => {
+                if (subj.marks >= 90) grades['A (90-100)']++;
+                else if (subj.marks >= 80) grades['B (80-89)']++;
+                else if (subj.marks >= 70) grades['C (70-79)']++;
+                else if (subj.marks >= 60) grades['D (60-69)']++;
+                else grades['F (0-59)']++;
+            });
         });
 
         const labels = (Object.keys(grades) as GradeKey[]).filter((grade: GradeKey) => grades[grade] > 0);
         const series = labels.map((grade: GradeKey) => grades[grade]);
 
+        const totalRelevantSubjects = series.reduce((sum, count) => sum + count, 0);
         const chartOptions = {
             chart: {
                 animations: {
@@ -54,7 +62,7 @@ export const PieChartComponent = ({ students }: PieChartComponentProps) => {
             tooltip: {
                 y: {
                     formatter: function (val: number): string {
-                        const percentage = ((val / students.length) * 100).toFixed(1);
+                        const percentage = ((val / totalRelevantSubjects) * 100).toFixed(1);
                         return val + " students (" + percentage + "%)";
                     }
                 }
@@ -73,15 +81,15 @@ export const PieChartComponent = ({ students }: PieChartComponentProps) => {
         };
 
         return { chartData: series, options: chartOptions };
-    }, [students]);
+    }, [students,selectedSubject]);
 
     useEffect(() => {
         const timeout = setTimeout(() => {
             window.dispatchEvent(new Event('resize'));
-        }, 400); 
+        }, 400);
 
         return () => clearTimeout(timeout);
-    }, [students]);
+    }, [students,selectedSubject]);
 
     return <ApexChart options={options} series={chartData} type="pie" height={320} />;
 };
