@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Search, Eye, Mail, Calendar, ChevronDown, ChevronUp, Award, BookOpen } from 'lucide-react';
+import { Search, Mail, Calendar, ChevronDown, ChevronUp, Award, BookOpen } from 'lucide-react';
 import { Student } from './Dashboard';
 import { Pagination } from './Pagination';
 import { useState } from 'react';
@@ -59,7 +59,6 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
             transition={{ delay: 0.9 }}
             className="bg-white rounded-xl shadow-sm border border-gray-200"
         >
-            {/* Header */}
             <div className="p-6 border-b border-gray-200">
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
                     <div>
@@ -83,7 +82,6 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
                 </div>
             </div>
 
-            {/* Desktop Table */}
             <div className="hidden lg:block overflow-x-auto">
                 <table className="w-full">
                     <thead className="bg-gray-50">
@@ -181,7 +179,6 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
                                     </td>
                                 </motion.tr>
                                 
-                                {/* Expanded Row */}
                                 {expandedRows.has(student.id) && (
                                     <motion.tr
                                         initial={{ opacity: 0, height: 0 }}
@@ -221,7 +218,6 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
                 </table>
             </div>
 
-            {/* Mobile Cards */}
             <div className="lg:hidden">
                 <div className="divide-y divide-gray-200">
                     {groupedStudents.map((student, index) => (
