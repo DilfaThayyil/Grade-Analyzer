@@ -10,10 +10,23 @@ interface StatsCardsProps {
 
 export const StatsCards = ({ students }: StatsCardsProps) => {
     const totalStudents = students.length;
-    const subjects = [...new Set(students.map(s => s.subject))];
-    const totalSubjects = subjects.length;
-    const overallAverage = Math.round((students.reduce((sum, s) => sum + s.marks, 0) / students.length) * 100) / 100;
-    const topScore = Math.max(...students.map(s => s.marks));
+    const allSubjects = students.flatMap(student =>
+        student.subjects.map(subject => ({
+            subject: subject.subject,
+            marks: subject.marks,
+        }))
+    );
+
+    const uniqueSubjects = [...new Set(allSubjects.map(s => s.subject))];
+    const totalSubjects = uniqueSubjects.length;
+
+    const averagePerSubject = uniqueSubjects.map(subjectName => {
+        const relevant = allSubjects.filter(s => s.subject === subjectName);
+        const avg = relevant.reduce((sum, s) => sum + s.marks, 0) / relevant.length;
+        return { subject: subjectName, avg: Math.round(avg) };
+    });
+
+    const topScore = allSubjects.length > 0 ? Math.max(...allSubjects.map(s => s.marks)) : 0;
 
     const stats = [
         {
@@ -31,15 +44,15 @@ export const StatsCards = ({ students }: StatsCardsProps) => {
             delay: 0.2
         },
         {
-            title: 'Overall Average',
-            value: `${overallAverage}%`,
+            title: 'Avg. mark per subject',
+            value: averagePerSubject,
             icon: TrendingUp,
             color: 'yellow',
             delay: 0.3
         },
         {
             title: 'Top Score',
-            value: `${topScore}%`,
+            value: topScore,
             icon: Award,
             color: 'purple',
             delay: 0.4
@@ -59,7 +72,17 @@ export const StatsCards = ({ students }: StatsCardsProps) => {
                     <div className="flex items-center justify-between">
                         <div>
                             <p className="text-sm font-medium text-gray-600">{stat.title}</p>
-                            <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                            {Array.isArray(stat.value) ? (
+                                <ul className="mt-2 space-y-1 text-sm text-gray-800">
+                                    {stat.value.map((item, index) => (
+                                        <li key={index}>
+                                            {item.subject}: <span className="font-semibold">{item.avg}%</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            ) : (
+                                <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                            )}
                         </div>
                         <div className={`p-3 bg-${stat.color}-100 rounded-lg`}>
                             <stat.icon className={`w-6 h-6 text-${stat.color}-600`} />

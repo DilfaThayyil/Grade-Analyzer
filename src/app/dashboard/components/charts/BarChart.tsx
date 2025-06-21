@@ -25,7 +25,7 @@ export const BarChartComponent = ({ data }: BarChartComponentProps) => {
                 toolbar: {
                     show: true,
                     tools: {
-                        download: true,
+                        download: false,
                         selection: false,
                         zoom: false,
                         zoomin: false,
@@ -73,10 +73,25 @@ export const BarChartComponent = ({ data }: BarChartComponentProps) => {
                 strokeDashArray: 3
             },
             tooltip: {
-                y: {
-                    formatter: function (val: number): string {
-                        return val + "%";
-                    }
+                custom: function ({
+                    series,
+                    seriesIndex,
+                    dataPointIndex,
+                    w
+                }: {
+                    series: number[][];
+                    seriesIndex: number;
+                    dataPointIndex: number;
+                    w: any;
+                }) {
+                    const subject = w.globals.labels[dataPointIndex];
+                    const average = series[seriesIndex][dataPointIndex];
+                    return `
+                    <div class="bg-white p-3 border border-gray-200 rounded-lg shadow text-gray-800">
+                      <p class="font-semibold text-gray-900">${subject}</p>
+                      <p class="text-green-600 font-medium">Avg Marks: ${average}%</p>
+                    </div>
+                  `;
                 }
             },
             responsive: [{

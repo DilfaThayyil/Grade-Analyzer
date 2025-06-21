@@ -10,17 +10,28 @@ import { StudentsTable } from './StudentsTable';
 import { UserAvatar } from './UserAvatar';
 import debounce from 'lodash/debounce'
 import axios from 'axios';
+import { signOut } from 'next-auth/react';
 
-export interface Student {
-    id: number;
-    name: string;
-    email: string;
+
+export interface DashboardProps {
+    userName: string;
+    userImage: string;
+}
+export interface Subject {
     subject: string;
     marks: number;
     examDate: string;
 }
 
-const Dashboard = ({ userName }: { userName: string }) => {
+export interface Student {
+    id: string;
+    name: string;
+    email: string;
+    subjects: Subject[];
+}
+
+
+const Dashboard = ({ userName, userImage }: DashboardProps) => {
     const [students, setStudents] = useState<Student[]>([]);
     const [selectedSubject, setSelectedSubject] = useState<string>('All');
     const [loading, setLoading] = useState(true);
@@ -33,6 +44,7 @@ const Dashboard = ({ userName }: { userName: string }) => {
         setLoading(true);
         try {
             const response = await axios.get(`/api/students?q=${query}&page=${page}&limit=5`);
+            console.log("stu______ : ", response.data)
             if (response.status === 200) {
                 setStudents(response.data.students);
                 setTotalStudents(response.data.total);
@@ -57,6 +69,7 @@ const Dashboard = ({ userName }: { userName: string }) => {
             debouncedFetchStudentData.cancel();
         };
     }, [searchTerm, currentPage, debouncedFetchStudentData]);
+
     const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
         if (!file) return
@@ -91,8 +104,18 @@ const Dashboard = ({ userName }: { userName: string }) => {
     const exportData = () => {
         const csvContent = [
             ['Name', 'Email', 'Subject', 'Marks', 'Exam Date'],
-            ...students.map(s => [s.name, s.email, s.subject, s.marks.toString(), s.examDate])
-        ].map(row => row.join(',')).join('\n');
+            ...students.flatMap(student =>
+                student.subjects.map(sub => [
+                    student.name,
+                    student.email,
+                    sub.subject,
+                    sub.marks.toString(),
+                    sub.examDate
+                ])
+            )
+        ]
+            .map(row => row.join(','))
+            .join('\n');
 
         const blob = new Blob([csvContent], { type: 'text/csv' });
         const url = window.URL.createObjectURL(blob);
@@ -115,12 +138,15 @@ const Dashboard = ({ userName }: { userName: string }) => {
                         <div className="flex items-center space-x-4">
                             <button
                                 onClick={exportData}
-                                className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                                className="flex items-center px-4 py-2  bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
                             >
                                 <Download className="w-4 h-4 mr-2" />
                                 Export Data
                             </button>
-                            <UserAvatar userName={userName} />
+                            <UserAvatar
+                                userName={userName}
+                                userImage={userImage}
+                                onLogout={() => signOut({ callbackUrl: '/login' })} />
                         </div>
                     </div>
                 </div>
@@ -135,14 +161,6 @@ const Dashboard = ({ userName }: { userName: string }) => {
                     <FileUpload onFileUpload={handleFileUpload} onFileDrop={handleFileDrop} />
                 </motion.div>
 
-                <StatsCards students={students} />
-
-                <ChartsSection
-                    students={students}
-                    selectedSubject={selectedSubject}
-                    onSubjectChange={setSelectedSubject}
-                />
-
                 <StudentsTable
                     students={students}
                     searchTerm={searchTerm}
@@ -154,6 +172,14 @@ const Dashboard = ({ userName }: { userName: string }) => {
                     onPageChange={setCurrentPage}
                     totalStudents={totalStudents}
                 />
+
+                <ChartsSection
+                    students={students}
+                    selectedSubject={selectedSubject}
+                    onSubjectChange={setSelectedSubject}
+                />
+                <StatsCards students={students} />
+
             </div>
         </div>
     );

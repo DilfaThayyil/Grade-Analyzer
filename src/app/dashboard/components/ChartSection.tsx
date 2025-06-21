@@ -15,15 +15,34 @@ interface ChartsSectionProps {
 }
 
 export const ChartsSection = ({ students, selectedSubject, onSubjectChange }: ChartsSectionProps) => {
-    const subjects = [...new Set(students.map(s => s.subject))];
-    const averageMarksPerSubject = subjects.map(subject => {
-        const subjectStudents = students.filter(s => s.subject === subject);
-        const average = subjectStudents.reduce((sum, s) => sum + s.marks, 0) / subjectStudents.length;
-        return { subject, average: Math.round(average * 100) / 100 };
+    const allSubjects = students.flatMap((student) =>
+        student.subjects.map((subj) => subj.subject)
+    );
+
+    const uniqueSubjects = [...new Set(allSubjects)];
+
+    const averageMarksPerSubject = uniqueSubjects.map((subject) => {
+        const allMarks = students.flatMap((student) =>
+            student.subjects
+                .filter((s) => s.subject === subject)
+                .map((s) => s.marks)
+        );
+        const avg =
+            allMarks.reduce((sum, mark) => sum + mark, 0) / allMarks.length || 0;
+        return { subject, average: Math.round(avg * 100) / 100 };
     });
 
+    const flattenedStudents = students.flatMap((student) =>
+        student.subjects.map((s) => ({
+            name: student.name,
+            subject: s.subject,
+            marks: s.marks,
+            examDate: s.examDate,
+        }))
+    );
+
     return (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8 pt-8">
             <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
@@ -40,10 +59,10 @@ export const ChartsSection = ({ students, selectedSubject, onSubjectChange }: Ch
                         <select
                             value={selectedSubject}
                             onChange={(e) => onSubjectChange(e.target.value)}
-                            className="border border-gray-300 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="border border-gray-300 text-gray-500 rounded-lg px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                         >
                             <option value="All">All Subjects</option>
-                            {subjects.map(subject => (
+                            {uniqueSubjects.map(subject => (
                                 <option key={subject} value={subject}>{subject}</option>
                             ))}
                         </select>
@@ -75,7 +94,7 @@ export const ChartsSection = ({ students, selectedSubject, onSubjectChange }: Ch
                     <PieChart className="w-5 h-5 mr-2 text-purple-600" />
                     Grade Distribution
                 </h3>
-                <PieChartComponent students={students} />
+                <PieChartComponent students={students} selectedSubject={selectedSubject} />
             </motion.div>
 
             <motion.div

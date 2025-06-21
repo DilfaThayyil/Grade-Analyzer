@@ -8,8 +8,8 @@ const LoginPage = () => {
 
   const [googleIsLoading, setGoogleIsLoading] = useState(false)
   const [microIsLoading, setMicroIsLoading] = useState(false)
-    
-  const handleGoogleSignIn = async() => {
+
+  const handleGoogleSignIn = async () => {
     setGoogleIsLoading(true)
     await signIn('google');
     setGoogleIsLoading(false)

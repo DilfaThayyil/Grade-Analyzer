@@ -9,9 +9,21 @@ interface LineChartProps {
 
 export const LineChartComponent = ({ students, selectedSubject }: LineChartProps) => {
     const { chartData, options } = useMemo(() => {
-        const filteredData = selectedSubject === 'All'
-            ? students
-            : students.filter(s => s.subject === selectedSubject);
+        const filteredData: { name: string; subject: string; marks: number }[] = [];
+
+        students.forEach((student) => {
+            const relevantSubjects = selectedSubject === 'All'
+                ? student.subjects
+                : student.subjects.filter(sub => sub.subject === selectedSubject);
+
+            relevantSubjects.forEach(sub => {
+                filteredData.push({
+                    name: student.name,
+                    subject: sub.subject,
+                    marks: sub.marks
+                });
+            });
+        });
 
         const categories = filteredData.map(student => student.name.split(' ')[0]);
         const data = filteredData.map(student => student.marks);
@@ -27,7 +39,7 @@ export const LineChartComponent = ({ students, selectedSubject }: LineChartProps
                 toolbar: {
                     show: true,
                     tools: {
-                        download: true,
+                        download: false,
                         selection: false,
                         zoom: false,
                         zoomin: false,

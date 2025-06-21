@@ -17,14 +17,16 @@ export const AreaChartComponent = ({ students }: { students: Student[] }) => {
     const { chartData, options } = useMemo(() => {
         const subjectData: SubjectData = {};
 
-        students.forEach((student: Student) => {
-            if (!subjectData[student.subject]) {
-                subjectData[student.subject] = [];
-            }
-            subjectData[student.subject].push({
-                date: new Date(student.examDate),
-                marks: student.marks,
-                name: student.name,
+        students.forEach((student) => {
+            student.subjects.forEach((subject) => {
+                if (!subjectData[subject.subject]) {
+                    subjectData[subject.subject] = [];
+                }
+                subjectData[subject.subject].push({
+                    date: new Date(subject.examDate),
+                    marks: subject.marks,
+                    name: student.name,
+                });
             });
         });
 
@@ -49,7 +51,7 @@ export const AreaChartComponent = ({ students }: { students: Student[] }) => {
                 toolbar: {
                     show: true,
                     tools: {
-                        download: true,
+                        download: false,
                         selection: false,
                         zoom: false,
                         zoomin: false,
@@ -112,6 +114,40 @@ export const AreaChartComponent = ({ students }: { students: Student[] }) => {
             legend: {
                 position: 'top',
                 fontSize: '12px',
+            },
+            tooltip: {
+                shared: true,
+                custom: function ({
+                    series,
+                    seriesIndex,
+                    dataPointIndex,
+                    w
+                }: {
+                    series: number[][];
+                    seriesIndex: number;
+                    dataPointIndex: number;
+                    w: any;
+                }) {
+                    const labels = w.globals.labels;
+                    const subjectNames = w.globals.seriesNames;
+
+                    let tooltipHTML = `<div class="bg-white p-3 border border-gray-200 rounded-lg shadow text-gray-800">`;
+                    tooltipHTML += `<p class="text-sm font-semibold text-gray-700 mb-2">${labels[dataPointIndex]}</p>`;
+
+                    subjectNames.forEach((subject: string, i: number) => {
+                        const value = series[i][dataPointIndex];
+                        if (value !== null && value !== undefined) {
+                            tooltipHTML += `
+                        <div class="flex justify-between items-center">
+                          <span class="text-sm text-gray-600">${subject}</span>
+                          <span class="text-sm font-medium text-emerald-600 ml-2">${value} marks</span>
+                        </div>`;
+                        }
+                    });
+
+                    tooltipHTML += `</div>`;
+                    return tooltipHTML;
+                }
             },
             responsive: [
                 {
