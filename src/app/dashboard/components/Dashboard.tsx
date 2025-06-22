@@ -1,6 +1,8 @@
 'use client';
 
+import { Empty, EmptyImage, EmptyTitle, EmptyDescription } from 'keep-react'
 import React, { useState, useEffect, useCallback } from 'react';
+import Image from 'next/image'
 import { motion } from 'framer-motion';
 import { Download } from 'lucide-react';
 import { StatsCards } from './StatsCards';
@@ -132,53 +134,73 @@ const Dashboard = ({ userName, userImage }: DashboardProps) => {
                     <div className="flex justify-between items-center py-6">
                         <div>
                             <h1 className="text-3xl font-bold text-gray-900 font-serif">Grade Analyzer</h1>
-                            <p className="text-gray-600 mt-1 ">Analyze and visualize student performance data</p>
+                            <p className="text-gray-600 mt-1">Analyze and visualize student performance data</p>
                         </div>
                         <div className="flex items-center space-x-4">
-                            <button
-                                onClick={exportData}
-                                className="flex items-center px-4 py-2  bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-                            >
-                                <Download className="w-4 h-4 mr-2" />
-                                Export Data
-                            </button>
+                            {students.length > 0 && (
+                                <button
+                                    onClick={exportData}
+                                    className="flex items-center px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+                                >
+                                    <Download className="w-4 h-4 mr-2" />
+                                    Export Data
+                                </button>
+                            )}
                             <UserAvatar
                                 userName={userName}
                                 userImage={userImage}
-                                onLogout={() => signOut({ callbackUrl: '/login' })} />
+                                onLogout={() => signOut({ callbackUrl: '/login' })}
+                            />
                         </div>
                     </div>
                 </div>
             </div>
 
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mb-8"
-                >
+                <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
                     <FileUpload onFileUpload={handleFileUpload} onFileDrop={handleFileDrop} />
                 </motion.div>
 
-                <StudentsTable
-                    students={students}
-                    searchTerm={searchTerm}
-                    onSearchChange={(term) => {
-                        setSearchTerm(term);
-                        setCurrentPage(1);
-                    }}
-                    currentPage={currentPage}
-                    onPageChange={setCurrentPage}
-                    totalStudents={totalStudents}
-                />
+                {students.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center text-center bg-white border border-dashed border-gray-300 p-12 rounded-lg shadow-sm">
+                        <Empty>
+                            <EmptyImage>
+                                <Image
+                                    src="https://staticmania.cdn.prismic.io/staticmania/16994ca5-ac01-4868-8ade-1b9e276ccdb3_Property+1%3DFolder_+Property+2%3DLg.svg"
+                                    height={234}
+                                    width={350}
+                                    alt="No Data"
+                                />
+                            </EmptyImage>
+                            <EmptyTitle className="mb-[14px] mt-5 text-gray-800 text-2xl font-semibold">No Data Found</EmptyTitle>
+                            <EmptyDescription className="mb-2 text-gray-500">
+                                Upload a CSV file above to start analyzing student performance through charts and tables.
+                            </EmptyDescription>
+                        </Empty>
+                    </div>
+                ) : (
+                    <>
+                        <StudentsTable
+                            students={students}
+                            searchTerm={searchTerm}
+                            onSearchChange={(term) => {
+                                setSearchTerm(term);
+                                setCurrentPage(1);
+                            }}
+                            currentPage={currentPage}
+                            onPageChange={setCurrentPage}
+                            totalStudents={totalStudents}
+                        />
 
-                <ChartsSection
-                    students={students}
-                    selectedSubject={selectedSubject}
-                    onSubjectChange={setSelectedSubject}
-                />
-                <StatsCards students={students} />
+                        <ChartsSection
+                            students={students}
+                            selectedSubject={selectedSubject}
+                            onSubjectChange={setSelectedSubject}
+                        />
 
+                        <StatsCards students={students} />
+                    </>
+                )}
             </div>
         </div>
     );
