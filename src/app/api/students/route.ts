@@ -6,7 +6,6 @@ const prisma = new PrismaClient();
 
 export async function GET(req: Request) {
     const session = await auth();
-    console.log("userrrrrrr:", session?.user);
 
     if (!session?.user?.id) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -59,7 +58,6 @@ export async function GET(req: Request) {
         const startIndex = (page - 1) * limit;
         const paginatedStudents = groupedStudents.slice(startIndex, startIndex + limit);
 
-        console.log("studensssssssssss:",paginatedStudents,"  ,  ","toallllll:",total)
         return NextResponse.json({ students: paginatedStudents, total }, { status: 200 });
 
     } catch (error) {

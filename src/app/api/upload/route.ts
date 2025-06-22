@@ -7,7 +7,6 @@ const prisma = new PrismaClient();
 
 export async function POST(req: Request) {
     const session = await auth();
-    console.log("user in upload : ",session?.user)
     if (!session?.user?.email) {
         return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
