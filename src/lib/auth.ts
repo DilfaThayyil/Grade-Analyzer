@@ -2,8 +2,8 @@ import { PrismaClient } from '@prisma/client';
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
+import { prisma } from './prisma';
 
-const prisma = new PrismaClient()
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     providers: [
@@ -39,4 +39,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         },
     },
     secret: process.env.NEXTAUTH_SECRET,
+    trustHost: true,
 });
