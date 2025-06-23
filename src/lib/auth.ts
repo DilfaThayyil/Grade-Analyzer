@@ -1,3 +1,5 @@
+console.log('--------------------- DATABASE_URL:', process.env.DATABASE_URL);
+
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import MicrosoftEntraID from 'next-auth/providers/microsoft-entra-id';
