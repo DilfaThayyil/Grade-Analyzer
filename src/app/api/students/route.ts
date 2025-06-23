@@ -36,7 +36,7 @@ export async function GET(req: Request) {
             const key = `${student.name}-${student.email}`;
             if (!groupedMap.has(key)) {
                 groupedMap.set(key, {
-                    id: student.userId,
+                    id: student.id,
                     name: student.name,
                     email: student.email,
                     subjects: [],
