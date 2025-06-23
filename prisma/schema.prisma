@@ -5,6 +5,7 @@ datasource db {
 
 generator client {
   provider = "prisma-client-js"
+  output   = "./generated/prisma-client-js"
 }
 
 model User {
@@ -17,17 +18,17 @@ model User {
 }
 
 model Student {
-  id        String   @id @default(cuid())
-  userId    String
-  uploadId  String
-  name      String
-  email     String
-  subject   String
-  marks     Int
-  examDate  DateTime
+  id       String   @id @default(cuid())
+  userId   String
+  uploadId String
+  name     String
+  email    String
+  subject  String
+  marks    Int
+  examDate DateTime
 
-  upload    Upload   @relation(fields: [uploadId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
+  upload Upload @relation(fields: [uploadId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
 }
 
 model Upload {
@@ -36,6 +37,6 @@ model Upload {
   createdAt DateTime @default(now())
   userId    String
 
-  user      User     @relation(fields: [userId], references: [id])
-  students  Student[]
+  user     User      @relation(fields: [userId], references: [id])
+  students Student[]
 }

@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@prisma/client": "^6.9.0",
+    "@prisma/client": "^6.10.1",
     "apexcharts": "^4.7.0",
     "axios": "^1.10.0",
     "framer-motion": "^12.18.1",
