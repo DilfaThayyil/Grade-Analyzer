@@ -19,7 +19,7 @@ interface StudentsTableProps {
 
 export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPage, onPageChange, totalStudents, itemsPerPage = 5 }: StudentsTableProps) => {
     const [expandedRows, setExpandedRows] = useState<Set<string>>(new Set());
-    
+
     const groupedStudents = students.map((student) => ({
         ...student,
         averageMarks: Math.round(
@@ -27,7 +27,7 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
         ),
         totalSubjects: student.subjects.length,
     }));
-    
+
     const toggleRowExpansion = (studentId: string) => {
         const newExpanded = new Set(expandedRows);
         if (newExpanded.has(studentId)) {
@@ -164,8 +164,8 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
                                         <div className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium border ${getGradeColor(student.averageMarks)}`}>
                                             <Award className="w-3 h-3 mr-1" />
                                             {student.averageMarks >= 90 ? 'Excellent' :
-                                             student.averageMarks >= 80 ? 'Good' :
-                                             student.averageMarks >= 70 ? 'Average' : 'Needs Improvement'}
+                                                student.averageMarks >= 80 ? 'Good' :
+                                                    student.averageMarks >= 70 ? 'Average' : 'Needs Improvement'}
                                         </div>
                                     </td>
                                     <td className="px-6 py-4">
@@ -245,7 +245,7 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
                                     <div className="text-xs text-gray-500">{student.totalSubjects} subjects</div>
                                 </div>
                             </div>
-                            
+
                             <div className="space-y-3">
                                 {student.subjects.map((subject, idx) => (
                                     <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -276,7 +276,7 @@ export const StudentsTable = ({ students, searchTerm, onSearchChange, currentPag
 
             <Pagination
                 currentPage={currentPage}
-                totalPages={Math.ceil(totalStudents/ itemsPerPage)}
+                totalPages={Math.ceil(totalStudents / itemsPerPage)}
                 onPageChange={onPageChange}
                 totalItems={totalStudents}
                 itemsPerPage={itemsPerPage}
