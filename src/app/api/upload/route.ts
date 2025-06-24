@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { auth } from '@/lib/auth';
 import { PrismaClient } from '@prisma/client';
 import { parse } from 'papaparse';
+import { groupStudents } from '@/utils/groupStudents';
 
 const prisma = new PrismaClient();
 
@@ -62,7 +63,7 @@ export async function POST(req: Request) {
                             {
                                 success: true,
                                 uploadId: upload.id,
-                                students: upload.students,
+                                students: groupStudents(upload.students),
                             },
                             { status: 200 }
                         )

@@ -42,7 +42,7 @@ export const UserAvatar = ({ userName, userImage, onLogout }: UserAvatarProps) =
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 shadow-sm hover:shadow-md transition-shadow focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2"
+                className="w-10 h-10 rounded-full overflow-hidden border border-gray-300 shadow-sm hover:shadow-md transition-shadow outline-none ring-2 ring-purple-500 ring-offset-2"
             >
                 {userImage ? (
                     <img
