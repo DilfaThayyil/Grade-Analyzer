@@ -22,27 +22,21 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         signIn: '/login',
     },
     callbacks: {
-        // async signIn({ user }) {
-        //     const existingUser = await prisma.user.findUnique({
-        //         where: { email: user.email! },
-        //     });
+        async signIn({ user }) {
+            const existingUser = await prisma.user.findUnique({
+                where: { email: user.email! },
+            });
 
-        //     if (!existingUser) {
-        //         await prisma.user.create({
-        //             data: {
-        //                 name: user.name,
-        //                 email: user.email!,
-        //                 image: user.image,
-        //             },
-        //         });
-        //     }
+            if (!existingUser) {
+                await prisma.user.create({
+                    data: {
+                        name: user.name,
+                        email: user.email!,
+                        image: user.image,
+                    },
+                });
+            }
 
-        //     return true;
-        // },
-        async signIn({ user, account, profile, email, credentials }) {
-            console.log('🔐 [SIGNIN] user:', user);
-            console.log('🔐 [SIGNIN] account:', account);
-            console.log('🔐 [SIGNIN] profile:', profile);
             return true;
         },
         async session({ session }) {
