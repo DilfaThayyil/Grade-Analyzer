@@ -22,9 +22,8 @@ export async function GET(req: Request) {
             where: {
                 userId: session.user.id,
                 OR: [
-                    { name: { contains: query } },
-                    { subject: { contains: query } },
-                    { email: { contains: query } },
+                    { name: { contains: query , mode: 'insensitive' } },
+                    { email: { contains: query , mode: 'insensitive' } },
                 ],
             },
             orderBy: { examDate: 'desc' },
@@ -42,12 +41,16 @@ export async function GET(req: Request) {
                     subjects: [],
                 });
             }
-
-            groupedMap.get(key).subjects.push({
-                subject: student.subject,
-                marks: student.marks,
-                examDate: student.examDate,
-            });
+            if (!student.subject || typeof student.marks !== 'number') {
+                console.warn(`Incomplete student entry:`, student);
+            }
+            if(student.subject && typeof student.marks === 'number'){
+                groupedMap.get(key).subjects.push({
+                    subject: student.subject,
+                    marks: student.marks,
+                    examDate: student.examDate,
+                });
+            }            
         }
 
         const groupedStudents = Array.from(groupedMap.values());
