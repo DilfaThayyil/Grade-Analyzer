@@ -46,7 +46,6 @@ const Dashboard = ({ userName, userImage }: DashboardProps) => {
         setLoading(true);
         try {
             const response = await axios.get(`/api/students?q=${query}&page=${page}&limit=5`);
-            console.log("response-fetching : ",response)
             if (response.status === 200) {
                 setStudents(response.data.students);
                 setTotalStudents(response.data.total);
