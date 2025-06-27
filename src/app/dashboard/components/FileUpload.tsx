@@ -31,8 +31,8 @@ export const FileUpload = ({ onFileUpload, onFileDrop }: FileUploadProps) => {
     return (
         <div
             className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-300 ${isDragOver
-                    ? 'border-blue-500 bg-blue-50'
-                    : 'border-gray-300 hover:border-gray-400'
+                ? 'border-blue-500 bg-blue-50'
+                : 'border-gray-300 hover:border-gray-400'
                 }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -40,7 +40,11 @@ export const FileUpload = ({ onFileUpload, onFileDrop }: FileUploadProps) => {
         >
             <Upload className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-semibold text-gray-900 mb-2">Upload Student Data</h3>
-            <p className="text-gray-600 mb-4">Drag and drop your CSV file here or click to browse</p>
+            <p className="text-gray-600 mb-4">
+                Drag and drop your CSV file here or click to browse.
+                <br />
+                The uploaded file should include: <strong>Name</strong>, <strong>Email</strong>, <strong>Subject</strong>, <strong>Mark</strong>, and <strong>Exam Date</strong>.
+            </p>
             <input
                 type="file"
                 accept=".csv"
